@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0c">
+<meta name="description" content="Protocolo Zovar 15X: treinos HIIT de 15 a 20 minutos com timer integrado e guia nutricional.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zovar 15X">
+<title>Protocolo Zovar 15X</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;1,700;1,800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  /* Paleta extraída das imagens da marca Zovar Fit */
+  --bg:#0a0a0b;
+  --bg-2:#101011;
+  --surface:#151517;
+  --surface-2:#1c1c1f;
+  --line:#2a2a2e;
+  --lime:#c6ff00;
+  --lime-2:#a8f000;
+  --amber:#ffb300;
+  --orange:#ff6a00;
+  --text:#f5f5f5;
+  --muted:#9b9ba3;
+  --grad:linear-gradient(180deg,#c6ff00 0%,#ffb300 55%,#ff6a00 100%);
+  --grad-h:linear-gradient(100deg,#c6ff00 0%,#ffb300 55%,#ff6a00 100%);
+  --head:'Barlow Condensed','Arial Narrow','Impact',sans-serif;
+  --body:'Barlow',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --tab-h:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:#050505}
+body{
+  font-family:var(--body);color:var(--text);background:var(--bg);
+  min-height:100vh;min-height:100dvh;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overscroll-behavior-y:none;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+.app{
+  max-width:560px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative;
+  background:
+    radial-gradient(900px 380px at 50% -120px, rgba(198,255,0,.07), transparent 70%),
+    var(--bg);
+  border-left:1px solid #141416;border-right:1px solid #141416;
+  padding-bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 20px);
+}
+/* ---------- Topo ---------- */
+.top{
+  position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;
+  padding:calc(10px + env(safe-area-inset-top)) 18px 10px;
+  background:rgba(10,10,11,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.top svg{width:38px;height:38px;filter:drop-shadow(0 0 8px rgba(198,255,0,.45))}
+.brand{line-height:1}
+.brand small{display:block;font-family:var(--head);font-weight:600;letter-spacing:.22em;font-size:12px;color:var(--muted);text-transform:uppercase}
+.brand b{font-family:var(--head);font-style:italic;font-weight:800;font-size:25px;text-transform:uppercase;letter-spacing:.02em;
+  background:var(--grad-h);-webkit-background-clip:text;background-clip:text;color:transparent}
+.top .prog{margin-left:auto;text-align:right;font-family:var(--head);font-weight:700;font-size:13px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;line-height:1.1}
+.top .prog b{display:block;font-size:22px;color:var(--lime);text-shadow:0 0 12px rgba(198,255,0,.5);font-style:italic}
+
+main{padding:18px 18px 0}
+.view{display:none;animation:fade .25s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+h1,h2,h3{font-family:var(--head);text-transform:uppercase;font-style:italic;font-weight:800;line-height:1;letter-spacing:.01em}
+.h-title{font-size:34px;margin-bottom:6px}
+.h-title .neon{color:var(--lime);text-shadow:0 0 18px rgba(198,255,0,.55)}
+.h-title .hot{color:var(--orange);text-shadow:0 0 18px rgba(255,106,0,.55)}
+.sub{color:var(--muted);font-size:15px;margin-bottom:18px}
+.lbl{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:13px;color:var(--muted);margin:20px 0 10px}
+
+/* ---------- Chips ---------- */
+.chips{display:flex;gap:8px}
+.chip{
+  flex:1;padding:11px 6px;border-radius:12px;background:var(--surface);border:1px solid var(--line);
+  font-family:var(--head);font-weight:700;font-size:17px;letter-spacing:.04em;text-transform:uppercase;text-align:center;
+  color:var(--muted);transition:.18s;position:relative;
+}
+.chip small{display:block;font-family:var(--body);font-weight:500;font-size:11px;letter-spacing:0;text-transform:none;opacity:.8;margin-top:1px}
+.chip.on{
+  color:#0a0a0b;background:var(--grad);border-color:transparent;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 6px 22px rgba(255,140,0,.28);
+}
+.chip.on small{opacity:.75}
+.chip.done::after{content:"✓";position:absolute;top:-7px;right:-4px;width:20px;height:20px;border-radius:50%;
+  background:var(--lime);color:#000;font:800 12px/20px var(--body);box-shadow:0 0 10px rgba(198,255,0,.7)}
+
+/* ---------- Cards ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.info div{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
+.info b{display:block;font-family:var(--head);font-style:italic;font-weight:800;font-size:23px;color:var(--lime);line-height:1.05}
+.info span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.wk-name{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.wk-name h3{font-size:24px}
+.wk-name span{font-size:13px;color:var(--muted)}
+
+/* ---------- Botões ---------- */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;width:100%;
+  padding:15px 18px;border-radius:14px;font-family:var(--head);font-style:italic;font-weight:800;
+  font-size:21px;letter-spacing:.05em;text-transform:uppercase;color:#0a0a0b;background:var(--grad-h);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1) inset,0 8px 28px rgba(255,120,0,.32),0 0 30px rgba(198,255,0,.12);
+  transition:transform .12s,filter .12s;
+}
+.btn:active{transform:scale(.975);filter:brightness(.92)}
+.btn.ghost{background:transparent;color:var(--lime);border:1px solid rgba(198,255,0,.45);box-shadow:none;font-size:16px;padding:11px 14px}
+.btn.ghost:active{background:rgba(198,255,0,.08)}
+.btn.out{background:var(--surface-2);color:var(--text);box-shadow:none;border:1px solid var(--line);font-size:17px;padding:12px}
+.btn.out.is-done{color:var(--lime);border-color:rgba(198,255,0,.5)}
+
+/* ---------- Exercícios ---------- */
+.exlist{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .2s}
+.ex.open{border-color:rgba(198,255,0,.4)}
+.ex-head{width:100%;display:flex;align-items:center;gap:12px;padding:14px;text-align:left}
+.ex-num{
+  flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  font-family:var(--head);font-style:italic;font-weight:800;font-size:22px;color:#0a0a0b;background:var(--grad);
+  box-shadow:0 0 14px rgba(255,160,0,.3)
+}
+.ex-name{flex:1;font-family:var(--head);font-weight:700;font-size:21px;line-height:1.05;text-transform:uppercase}
+.ex-time{font-size:12px;color:var(--muted);white-space:nowrap}
+.chev{color:var(--lime);transition:transform .2s;font-size:15px}
+.ex.open .chev{transform:rotate(180deg)}
+.ex-body{display:none;padding:0 14px 16px;font-size:14.5px;color:#d6d6db}
+.ex.open .ex-body{display:block}
+.ex-body p{margin-bottom:9px}
+.ex-body b{color:var(--lime);font-weight:600}
+.ex-body .btn{margin-top:6px}
+
+details.acc{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:8px}
+details.acc summary{list-style:none;padding:14px 16px;font-family:var(--head);font-weight:700;font-size:17px;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;display:flex;justify-content:space-between}
+details.acc summary::-webkit-details-marker{display:none}
+details.acc summary::after{content:"+";color:var(--lime);font-size:22px;line-height:.9}
+details.acc[open] summary::after{content:"–"}
+details.acc .in{padding:0 16px 14px;font-size:14.5px;color:#cfcfd5}
+details.acc ul{padding-left:18px}
+details.acc li{margin-bottom:5px}
+
+/* ---------- Timer ---------- */
+.tcard{
+  --ph:#e8e8e8;
+  margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:20px 16px 18px;text-align:center;position:relative;overflow:hidden;
+}
+.tcard[data-phase=work]{--ph:var(--lime)}
+.tcard[data-phase=rest]{--ph:var(--orange)}
+.tcard[data-phase=finisher]{--ph:#ff3d00}
+.tcard[data-phase=done]{--ph:var(--lime)}
+.tcard.flash{animation:flash .55s ease-out}
+@keyframes flash{0%{box-shadow:0 0 0 0 var(--ph),inset 0 0 90px var(--ph)}100%{box-shadow:0 0 0 0 transparent,inset 0 0 0 transparent}}
+.phase{font-family:var(--head);font-style:italic;font-weight:800;font-size:34px;letter-spacing:.06em;text-transform:uppercase;color:var(--ph);text-shadow:0 0 20px var(--ph);min-height:36px}
+.ringwrap{position:relative;width:min(78vw,300px);aspect-ratio:1;margin:10px auto 8px}
+.ringwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.trk{fill:none;stroke:#242428;stroke-width:10}
+.pg{fill:none;stroke:var(--ph);stroke-width:10;stroke-linecap:round;filter:drop-shadow(0 0 7px var(--ph));transition:stroke .25s}
+.digits{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--head);font-weight:700;font-size:min(26vw,104px);letter-spacing:.02em;font-variant-numeric:tabular-nums;
+  color:#fff;text-shadow:0 0 24px var(--ph);
+}
+.exname{font-family:var(--head);font-weight:700;font-size:25px;text-transform:uppercase;min-height:30px}
+.meta{font-size:13.5px;color:var(--muted);min-height:20px;margin-top:2px}
+.bar{height:6px;border-radius:6px;background:#242428;margin:16px 6px 4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--grad-h);border-radius:6px;box-shadow:0 0 10px rgba(255,160,0,.6)}
+.bar-l{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin:0 6px 14px}
+.ctrl{display:flex;align-items:center;gap:12px}
+.ctrl .btn{flex:1;font-size:25px;padding:17px}
+.round{flex:none;width:58px;height:58px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);font-size:23px;color:var(--text);transition:.12s}
+.round:active{transform:scale(.92);border-color:var(--lime)}
+.queue{display:flex;gap:6px;margin-top:16px}
+.queue span{
+  flex:1;padding:8px 4px;border-radius:10px;background:var(--bg-2);border:1px solid var(--line);
+  font-size:11.5px;line-height:1.2;color:var(--muted);transition:.2s
+}
+.queue span.on{border-color:var(--ph);color:#fff;box-shadow:0 0 14px -2px var(--ph);background:rgba(255,255,255,.04)}
+.queue span.nx{color:#d9d9de}
+.sel{width:100%;margin-top:10px;padding:12px;border-radius:12px;background:var(--surface-2);color:var(--text);border:1px solid var(--line);font:500 15px var(--body)}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:13px 16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;font-size:14.5px}
+.switch input{appearance:none;-webkit-appearance:none;width:48px;height:28px;border-radius:20px;background:#2e2e33;position:relative;transition:.2s;flex:none}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.switch input:checked{background:var(--lime)}
+.switch input:checked::after{left:23px;background:#0a0a0b}
+
+/* ---------- Nutrição ---------- */
+.food{display:flex;gap:14px;padding:14px;margin-bottom:10px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+.food .n{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--head);font-style:italic;font-weight:800;font-size:22px;color:#0a0a0b;background:var(--grad)}
+.food h3{font-size:21px;margin-bottom:5px}
+.food p{font-size:14.5px;color:#cfcfd5}
+.water{border-color:rgba(198,255,0,.4);background:linear-gradient(180deg,rgba(198,255,0,.07),transparent)}
+.shake{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+.shake .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-family:var(--head);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#0a0a0b;background:var(--grad-h);margin-bottom:8px}
+.shake h3{font-size:26px;margin-bottom:3px}
+.shake .when{font-size:13px;color:var(--muted);margin-bottom:10px}
+.shake h4{font-family:var(--head);text-transform:uppercase;letter-spacing:.12em;font-size:13px;color:var(--lime);margin:10px 0 6px}
+.shake ul{list-style:none}
+.shake li{padding:7px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+.shake li::before{content:"⚡ ";font-size:12px}
+.shake p{font-size:14.5px;color:#d3d3d8}
+.plate{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.plate div{padding:12px;border-radius:12px;background:var(--bg-2);border:1px solid var(--line);font-size:13.5px;color:#cfcfd5}
+.plate b{display:block;font-family:var(--head);font-style:italic;font-weight:800;font-size:26px;color:var(--lime)}
+.legal{margin:26px 4px 6px;font-size:11.5px;color:#6d6d75;text-align:center;line-height:1.5}
+.legal a,.legal button{color:#8a8a92;text-decoration:underline;font-size:11.5px}
+
+/* ---------- Barra de abas ---------- */
+.tabbar{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:30;width:100%;max-width:560px;
+  display:flex;padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(12,12,13,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);
+}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 4px;border-radius:14px;color:var(--muted);transition:.18s;position:relative}
+.tab .ic{font-size:23px;line-height:1;filter:grayscale(1) opacity(.7);transition:.18s}
+.tab span.t{font-family:var(--head);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+.tab.on{color:var(--lime)}
+.tab.on .ic{filter:none;transform:translateY(-1px) scale(1.08);text-shadow:0 0 14px var(--lime)}
+.tab.on::before{content:"";position:absolute;top:-9px;left:28%;right:28%;height:3px;border-radius:3px;background:var(--grad-h);box-shadow:0 0 12px var(--orange)}
+@media (min-width:600px){.app{margin:0 auto}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Carregamento ---------- */
+.loader{position:fixed;inset:0;z-index:100;background:radial-gradient(900px 380px at 50% -120px, rgba(198,255,0,.07), transparent 70%),var(--bg);transition:opacity .4s ease,visibility .4s}
+.loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.ld-app{max-width:560px;height:100%;margin:0 auto;display:flex;flex-direction:column}
+.ld-band{flex:none;height:4px;background:var(--grad-h);box-shadow:0 0 14px rgba(255,140,0,.55),0 0 28px rgba(198,255,0,.18)}
+.ld-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 18px}
+.ld-ring{position:relative;width:min(68vw,270px);aspect-ratio:1}
+.ld-ring .r{display:block;width:100%;height:100%;overflow:visible}
+.ld-ring .trk{stroke-width:8}
+.ld-ring .arc{fill:none;stroke:url(#lrg);stroke-width:8;stroke-linecap:round;filter:drop-shadow(0 0 8px rgba(255,179,0,.65))}
+.ld-ring .z{overflow:visible;position:absolute;left:50%;top:50%;width:46%;height:46%;transform:translate(-50%,-50%);filter:drop-shadow(0 0 12px rgba(198,255,0,.5));animation:ldpulse 1.8s ease-in-out infinite}
+.ld-pct{margin-top:30px;font-family:var(--head);font-weight:700;font-size:46px;line-height:1;letter-spacing:.02em;font-variant-numeric:tabular-nums;background:linear-gradient(100deg,#ffffff 0%,#f2ff9e 55%,#ffd27a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.ld-txt{margin-top:12px;padding-left:.28em;font-family:var(--head);font-weight:700;font-size:16px;letter-spacing:.28em;text-transform:uppercase}
+.ld-txt .w{position:relative;display:inline-block;background:linear-gradient(100deg,#ffffff 0%,#f2ff9e 55%,#ffd27a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.ld-txt .dots{position:absolute;left:100%;top:0;white-space:nowrap;letter-spacing:.1em;color:#ffd27a;-webkit-text-fill-color:#ffd27a}
+.ld-txt .dots i{font-style:normal;animation:lddot 1.2s ease-in-out infinite both}
+.ld-txt .dots i:nth-child(2){animation-delay:.2s}
+.ld-txt .dots i:nth-child(3){animation-delay:.4s}
+@keyframes ldpulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.07)}}
+@keyframes lddot{0%,100%{opacity:.45}40%{opacity:1}}
+
+/* ---------- Suporte ---------- */
+.fab{position:fixed;z-index:35;right:max(16px,calc((100vw - 560px)/2 + 16px));bottom:calc(var(--tab-h) + env(safe-area-inset-bottom) + 24px);
+  width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--grad);
+  box-shadow:0 0 0 1px rgba(255,255,255,.1) inset,0 8px 26px rgba(255,120,0,.38),0 0 24px rgba(198,255,0,.15);transition:transform .12s,opacity .2s}
+.fab:active{transform:scale(.92)}
+.fab svg,.sup-ico svg{width:26px;height:26px;fill:none;stroke:#0a0a0b;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body[data-tab=timer] .fab{opacity:0;pointer-events:none}
+.sup{position:fixed;inset:0;z-index:60;display:flex;align-items:flex-end;justify-content:center;visibility:hidden;opacity:0;transition:opacity .2s,visibility .2s}
+.sup.open{visibility:visible;opacity:1}
+.sup-bg{position:absolute;inset:0;background:rgba(0,0,0,.66);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.sup-panel{position:relative;width:100%;max-width:560px;max-height:88vh;max-height:88dvh;display:flex;flex-direction:column;
+  background:radial-gradient(700px 260px at 50% -90px, rgba(198,255,0,.08), transparent 70%),var(--bg);
+  border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;padding-bottom:env(safe-area-inset-bottom);
+  transform:translateY(28px);transition:transform .25s ease}
+.sup.open .sup-panel{transform:none}
+.sup-head{display:flex;align-items:center;gap:12px;padding:16px 18px 14px;border-bottom:1px solid var(--line)}
+.sup-ico{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--grad);box-shadow:0 0 14px rgba(255,160,0,.3)}
+.sup-ico svg{width:23px;height:23px}
+.sup-x{margin-left:auto;flex:none;width:40px;height:40px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);font-size:17px;color:var(--text)}
+.sup-x:active{border-color:var(--lime)}
+.sup-body{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:0 18px 24px}
+.sup-grp .lbl{margin:18px 0 10px}
+.sup-grp:first-child .lbl{margin-top:16px}
+.sup details.acc summary{gap:12px;align-items:flex-start;font-size:16.5px;line-height:1.15}
+.sup details.acc summary::after{flex:none}
+.sup details.acc .in b{color:var(--lime);font-weight:600}
+.sup-cta{margin-top:18px;text-decoration:none}
+</style>
+</head>
+<body data-tab="treinos">
+<div class="loader" id="loader" role="progressbar" aria-label="Carregando" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+  <div class="ld-app">
+    <div class="ld-band t" aria-hidden="true"></div>
+    <div class="ld-main">
+      <div class="ld-ring" aria-hidden="true">
+        <svg class="r" viewBox="0 0 200 200">
+          <defs><linearGradient id="lrg" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#c6ff00"/><stop offset=".55" stop-color="#ffb300"/><stop offset="1" stop-color="#ff6a00"/></linearGradient></defs>
+          <circle class="trk" cx="100" cy="100" r="88"/>
+          <circle class="arc" id="ldArc" cx="100" cy="100" r="88" transform="rotate(-90 100 100)"/>
+        </svg>
+        <svg class="z" viewBox="0 0 100 100"><defs><linearGradient id="lzg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c6ff00"/><stop offset=".55" stop-color="#ffb300"/><stop offset="1" stop-color="#ff6a00"/></linearGradient></defs><polygon fill="url(#lzg)" points="26,14 94,14 52,66 86,66 74,86 8,86 52,34 18,34"/></svg>
+      </div>
+      <div class="ld-pct" id="ldPct" aria-hidden="true">0%</div>
+      <div class="ld-txt" aria-hidden="true"><span class="w">Carregando<span class="dots"><i>.</i><i>.</i><i>.</i></span></span></div>
+    </div>
+    <div class="ld-band b" aria-hidden="true"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var L=document.getElementById('loader'); if(!L) return;
+  var arc=document.getElementById('ldArc'), pct=document.getElementById('ldPct');
+  var C = 2*Math.PI*88;
+  /* Ajustes (em milissegundos): DELAY = tempo parado em 0% no início | RAMP = tempo para ir de 0% a 99% | HOLD = tempo parado em 99% antes de abrir */
+  var DELAY=1000, RAMP=6000, HOLD=2000, CAP=99;
+  var t0=Date.now(), ready=false, finishing=false, lastShown=-1;
+  arc.style.strokeDasharray = C;
+
+  function paint(v){
+    var shown = Math.floor(v);
+    arc.style.strokeDashoffset = C*(1-v/100);
+    arc.style.opacity = v > 0.4 ? 1 : 0;
+    if(shown !== lastShown){ lastShown = shown; pct.textContent = shown+'%'; L.setAttribute('aria-valuenow', shown); }
+  }
+  function finish(){
+    if(finishing) return; finishing = true;
+    paint(100);
+    setTimeout(function(){
+      L.classList.add('hide');
+      setTimeout(function(){ if(L.parentNode) L.parentNode.removeChild(L); }, 500);
+    }, 650);
+  }
+  var holdStarted=false;
+  function frame(){
+    if(finishing) return;
+    var t = Math.max(0, Math.min(1, (Date.now()-t0-DELAY)/RAMP));
+    paint(CAP*(1-Math.pow(1-t, 1.3)));
+    if(t>=1 && ready){
+      if(!holdStarted){ holdStarted=true; setTimeout(finish, HOLD); }
+      return;
+    }
+    requestAnimationFrame(frame);
+  }
+  paint(0);
+  requestAnimationFrame(frame);
+
+  function onReady(){
+    var f = document.fonts && document.fonts.ready;
+    if(f){ Promise.race([f, new Promise(function(r){ setTimeout(r, 2500); })]).then(function(){ ready=true; }, function(){ ready=true; }); }
+    else ready = true;
+  }
+  if(document.readyState==='complete') onReady(); else window.addEventListener('load', onReady);
+  setTimeout(function(){ ready = true; }, 12000);          /* segurança: nunca trava */
+  setTimeout(function(){ if(!finishing){ holdStarted=true; finish(); } }, 20000);
+})();
+</script>
+<div class="app">
+
+  <header class="top">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <defs><linearGradient id="zg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c6ff00"/><stop offset=".55" stop-color="#ffb300"/><stop offset="1" stop-color="#ff6a00"/></linearGradient></defs>
+      <polygon fill="url(#zg)" points="26,14 94,14 52,66 86,66 74,86 8,86 52,34 18,34"/>
+    </svg>
+    <div class="brand"><small>Zovar Fit</small><b>Protocolo 15X</b></div>
+    <div class="prog">Progresso<b id="progTxt">0/12</b></div>
+  </header>
+
+  <main>
+    <!-- ================= TREINOS ================= -->
+    <section id="tab-treinos" class="view active" aria-label="Treinos">
+      <h1 class="h-title">Seu treino <span class="neon">de hoje</span></h1>
+      <p class="sub">3 treinos por semana · 45s de ação / 15s de descanso · só o peso do corpo.</p>
+
+      <div class="lbl" style="margin-top:6px">Semana</div>
+      <div class="chips" id="weekChips"></div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="wk-name"><h3 id="wkName"></h3><span id="wkDays">Seg · Qua · Sex</span></div>
+        <div class="info" id="wkInfo"></div>
+      </div>
+
+      <div class="lbl">Treino</div>
+      <div class="chips" id="trChips"></div>
+
+      <div class="card" style="margin-top:12px">
+        <h3 id="trName" style="font-size:26px"></h3>
+        <p class="sub" id="trFocus" style="margin:6px 0 14px"></p>
+        <button class="btn" id="goTimerBtn">⏱ Iniciar no timer</button>
+      </div>
+
+      <div class="lbl">4 exercícios · toque para ver como fazer</div>
+      <div class="exlist" id="exList"></div>
+
+      <button class="btn out" id="doneBtn"></button>
+
+      <div class="lbl">Antes e depois</div>
+      <details class="acc"><summary>Aquecimento (2 a 3 min)</summary><div class="in">Rotação de ombros, rotação de quadril, elevação de joelhos leve, agachamentos lentos e polichinelos leves. Prepara articulações e coração e reduz o risco de lesão.</div></details>
+      <details class="acc"><summary>Desaquecimento (2 min)</summary><div class="in">Respiração profunda e alongamento leve de pernas, glúteos, ombros e abdômen.</div></details>
+      <details class="acc"><summary>3 regras de ouro</summary><div class="in"><ul>
+        <li><b>Intensidade é você quem define.</b> Dê o seu máximo possível com boa execução. Técnica vem antes de velocidade.</li>
+        <li><b>Consistência vence perfeição.</b> Três treinos por semana, sem falhar.</li>
+        <li><b>Respeite seu corpo.</b> Dor aguda, tontura ou mal-estar: pare e descanse. Com condição de saúde, consulte um médico antes.</li></ul></div></details>
+      <details class="acc"><summary>Como progredir nas 4 semanas</summary><div class="in">Semana 1 (Ativação): 3 rodadas. Semana 2 (Aceleração): 4 rodadas. Semana 3 (Intensificação): 4 rodadas + finisher de 2 min. Semana 4 (Máxima Queima): 5 rodadas. Treine em dias alternados e mantenha ao menos um dia de descanso entre os treinos.</div></details>
+    </section>
+
+    <!-- ================= TIMER ================= -->
+    <section id="tab-timer" class="view" aria-label="Timer">
+      <h1 class="h-title">Timer <span class="hot">HIIT</span></h1>
+      <p class="sub" id="tSub">Configurado automaticamente para o seu treino.</p>
+
+      <div class="chips" id="tWeekChips"></div>
+      <div class="chips" id="tTrChips" style="margin-top:8px"></div>
+      <select class="sel" id="finSel" aria-label="Exercício do finisher" hidden></select>
+
+      <div class="tcard" id="tCard" data-phase="prep">
+        <div class="phase" id="tPhase">Pronto?</div>
+        <div class="ringwrap">
+          <svg viewBox="0 0 200 200" aria-hidden="true"><circle class="trk" cx="100" cy="100" r="88"/><circle class="pg" id="ring" cx="100" cy="100" r="88"/></svg>
+          <div class="digits" id="tDigits" role="timer" aria-live="off">00:05</div>
+        </div>
+        <div class="exname" id="tEx"></div>
+        <div class="meta" id="tMeta"></div>
+        <div class="bar"><i id="tBar"></i></div>
+        <div class="bar-l"><span id="tElapsed">0:00</span><span id="tTotal">0:00</span></div>
+        <div class="ctrl">
+          <button class="round" id="bReset" aria-label="Reiniciar">↺</button>
+          <button class="btn" id="bMain">▶ Iniciar</button>
+          <button class="round" id="bSkip" aria-label="Pular etapa">⏭</button>
+        </div>
+        <div class="queue" id="tQueue"></div>
+      </div>
+
+      <label class="switch"><span>🔔 Alertas sonoros e vibração</span><input type="checkbox" id="sndChk" checked></label>
+      <p class="legal" style="margin-top:14px">Dica: apoie o celular na altura dos olhos. A tela fica acesa durante o treino quando o aparelho permite.</p>
+    </section>
+
+    <!-- ================= NUTRIÇÃO ================= -->
+    <section id="tab-nutri" class="view" aria-label="Nutrição">
+      <h1 class="h-title">Guia <span class="neon">Nutricional</span> Express</h1>
+      <p class="sub">Nenhum alimento queima gordura sozinho. Estes ajudam metabolismo, saciedade e recuperação.</p>
+
+      <div class="lbl" style="margin-top:6px">5 alimentos campeões</div>
+      <div id="foods"></div>
+
+      <div class="food water"><div class="n">💧</div><div><h3>Bônus: água</h3><p>Até a desidratação leve reduz seu rendimento no treino e pode ser confundida com fome. Beba água ao longo do dia, antes, durante e depois de treinar.</p></div></div>
+
+      <div class="lbl">Shakes express</div>
+      <div id="shakes"></div>
+
+      <div class="lbl">Seu prato Zovar</div>
+      <div class="plate">
+        <div><b>½</b>Legumes e verduras</div>
+        <div><b>¼</b>Proteína: ovos, frango, peixe, carne magra, leguminosas</div>
+        <div><b>¼</b>Carbo de qualidade: arroz integral, batata-doce, aveia, mandioca</div>
+        <div><b>+</b>Um fio de gordura boa: azeite, abacate, castanhas</div>
+      </div>
+      <p class="sub" style="margin-top:12px">Evite no dia a dia: refrigerantes, sucos industrializados, ultraprocessados em excesso e álcool em abundância.</p>
+    </section>
+
+    <p class="legal"><button id="resetProg">Zerar meu progresso</button></p>
+  </main>
+
+  <nav class="tabbar" role="tablist" aria-label="Navegação principal">
+    <button class="tab on" role="tab" data-tab="treinos"><span class="ic">⚡</span><span class="t">Treinos</span></button>
+    <button class="tab" role="tab" data-tab="timer"><span class="ic">⏱️</span><span class="t">Timer</span></button>
+    <button class="tab" role="tab" data-tab="nutri"><span class="ic">🍏</span><span class="t">Nutrição</span></button>
+  </nav>
+</div>
+
+<button class="fab" id="supBtn" aria-label="Suporte" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2.5" y="13" width="4.5" height="7" rx="2"/><rect x="17" y="13" width="4.5" height="7" rx="2"/><path d="M19.5 20c0 1.4-1.6 2-4 2h-2"/></svg></button>
+
+<div class="sup" id="sup" aria-hidden="true">
+  <div class="sup-bg" id="supBg"></div>
+  <div class="sup-panel" role="dialog" aria-modal="true" aria-labelledby="supTitle">
+    <div class="sup-head">
+      <span class="sup-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="2.5" y="13" width="4.5" height="7" rx="2"/><rect x="17" y="13" width="4.5" height="7" rx="2"/><path d="M19.5 20c0 1.4-1.6 2-4 2h-2"/></svg></span>
+      <div class="brand"><small>Zovar Fit</small><b id="supTitle">Suporte</b></div>
+      <button class="sup-x" id="supX" aria-label="Fechar">✕</button>
+    </div>
+    <div class="sup-body" id="supBody">
+      <div id="supList"></div>
+      <a class="btn sup-cta" id="supCta" hidden target="_blank" rel="noopener">Falar com o suporte</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ================= DADOS ================= */
+var WORK_S = 45, REST_S = 15, PREP_S = 5;
+
+var WEEKS = [
+  {n:1, name:'Ativação',        rounds:3, between:30, fin:0},
+  {n:2, name:'Aceleração',      rounds:4, between:30, fin:0},
+  {n:3, name:'Intensificação',  rounds:4, between:20, fin:120},
+  {n:4, name:'Máxima Queima',   rounds:5, between:20, fin:0}
+];
+
+var WORKOUTS = {
+  A:{ name:'Derretimento Geral', short:'Geral', focus:'Gasto calórico total, corpo inteiro e aceleração do coração.', ex:[
+    {n:'Polichinelo', how:'Em pé, pés juntos e braços ao lado do corpo. Salte abrindo as pernas e levantando os braços acima da cabeça, depois volte. Mantenha o ritmo constante.', tip:'Aterrisse suave, com os joelhos levemente flexionados.', easy:'Versão sem salto, alternando um pé de cada vez para o lado (step jack).'},
+    {n:'Agachamento Livre', how:'Pés na largura dos ombros, pontas levemente para fora. Leve o quadril para trás e para baixo como se fosse sentar, peito aberto e joelhos alinhados com os pés. Suba empurrando o chão.', tip:'Desça até onde mantiver a coluna neutra e os calcanhares no chão.', hard:'Transforme em agachamento com salto.'},
+    {n:'Flexão de Braços', how:'Mãos um pouco mais largas que os ombros, corpo alinhado da cabeça aos calcanhares. Desça o peito em direção ao chão e empurre de volta.', tip:'Contraia abdômen e glúteos para não deixar o quadril cair.', easy:'Apoie os joelhos no chão ou faça com as mãos em uma superfície elevada (sofá, bancada).'},
+    {n:'Corrida Estacionária (Joelhos Altos)', how:'Corra no lugar elevando os joelhos até a altura do quadril, balançando os braços de forma coordenada.', tip:'Fique na ponta dos pés e mantenha o tronco ereto.', easy:'Marcha acelerada no lugar, sem impacto.'}
+  ]},
+  B:{ name:'Definição de Membros Inferiores', short:'Inferiores', focus:'Pernas e glúteos mais firmes e definidos, com queima de gordura intensa.', ex:[
+    {n:'Afundo Alternado', how:'Dê um passo largo à frente e desça o quadril até os dois joelhos formarem cerca de 90 graus. Empurre o chão com o pé da frente para voltar e alterne a perna.', tip:'O joelho da frente não deve ultrapassar muito a ponta do pé e o tronco fica ereto.', easy:'Afundo estático (sem trocar de perna) apoiando-se em uma parede ou cadeira.'},
+    {n:'Agachamento Sumô', how:'Pés bem afastados, pontas voltadas para fora. Desça o quadril mantendo o tronco ereto e suba apertando glúteos e parte interna das coxas.', tip:'Imagine que está “abrindo o chão” com os pés.'},
+    {n:'Ponte de Glúteos', how:'Deitado de barriga para cima, joelhos dobrados e pés no chão. Eleve o quadril até formar uma linha reta do ombro ao joelho, contraindo forte os glúteos no topo. Desça com controle.', tip:'Segure 1 segundo no topo de cada repetição.', hard:'Versão com uma perna só, alternando a cada rodada.'},
+    {n:'Agachamento com Salto', how:'Desça em um agachamento e exploda para cima em um salto. Aterrisse suave e emende o próximo agachamento.', tip:'Aterrisse sempre com os joelhos dobrados para absorver o impacto.', easy:'Agachamento rápido, subindo na ponta dos pés, sem sair do chão.'}
+  ]},
+  C:{ name:'Core e Abdômen', short:'Core', focus:'Fortalecimento do centro do corpo, postura, estabilidade e definição abdominal.', ex:[
+    {n:'Prancha Abdominal', how:'Apoie antebraços e pontas dos pés no chão, corpo em linha reta da cabeça aos calcanhares. Contraia abdômen e glúteos e respire de forma contínua.', tip:'Não deixe o quadril subir nem afundar. Olhe para o chão, pescoço relaxado.', easy:'Apoie os joelhos no chão.'},
+    {n:'Mountain Climber', how:'Em prancha alta (braços estendidos), traga um joelho em direção ao peito e alterne rapidamente as pernas, como se corresse na horizontal.', tip:'Mantenha os ombros sobre as mãos e o quadril estável.', easy:'Faça mais devagar, alternando com controle.'},
+    {n:'Abdominal Bicicleta', how:'Deitado, mãos atrás da cabeça, eleve os ombros e leve o cotovelo ao joelho oposto enquanto estende a outra perna. Alterne em movimento contínuo de pedalada.', tip:'Gire o tronco, não apenas os cotovelos. Evite puxar o pescoço com as mãos.'},
+    {n:'Elevação de Pernas Deitado', how:'Deitado de barriga para cima, mãos sob o quadril. Eleve as pernas esticadas até 90 graus com o corpo e desça devagar, sem encostar os pés no chão.', tip:'Se a lombar levantar do chão, dobre levemente os joelhos.', easy:'Eleve uma perna de cada vez.'}
+  ]}
+};
+
+var FOODS = [
+  {n:'Ovos', p:'Proteína de alta qualidade e nutrientes essenciais. A proteína exige mais energia para ser digerida que carboidratos e gorduras, aumenta a saciedade e ajuda a manter massa muscular.'},
+  {n:'Frango, peixes e atum', p:'Fontes de proteína magra. Proteína suficiente ao longo do dia ajuda a preservar músculos enquanto você perde gordura, e músculo é tecido metabolicamente ativo.'},
+  {n:'Aveia', p:'Carboidrato de absorção mais lenta e rico em fibras. Dá energia estável para o treino, aumenta a saciedade e ajuda a controlar a fome.'},
+  {n:'Chá verde (ou café sem exageros)', p:'Catequinas e cafeína podem dar um pequeno impulso ao gasto energético e ao foco. É um auxílio leve, não milagre. Evite tomar tarde se atrapalhar seu sono.'},
+  {n:'Pimenta, gengibre e especiarias', p:'Podem aumentar levemente a produção de calor do corpo e deixam as refeições saborosas sem somar calorias. Use com moderação, respeitando sua tolerância.'}
+];
+
+var SHAKES = [
+  {tag:'Pré-treino', name:'Ignição Zovar', when:'Energia rápida e leve. Tomar de 30 a 45 minutos antes.',
+   ing:['1 banana média (de preferência madura)','2 colheres de sopa de aveia em flocos','1 dose de café coado frio, cerca de 50 ml (opcional)','200 ml de leite ou bebida vegetal','1 pitada de canela','Gelo a gosto'],
+   prep:'Bata tudo no liquidificador por cerca de 40 segundos, até ficar cremoso. Beba logo em seguida.',
+   why:'Carboidrato de fácil digestão e fibras para energia sustentada, com um toque de cafeína para foco.'},
+  {tag:'Pós-treino', name:'Recuperação Express', when:'Proteína e carboidrato para recuperação muscular. Tomar até 1 hora após o treino.',
+   ing:['1 scoop (cerca de 30 g) de whey protein ou 150 g de iogurte grego natural','1 punhado de frutas vermelhas congeladas','1 colher de sopa de linhaça ou chia','200 ml de água gelada ou leite','Opcional: ½ banana para mais energia'],
+   prep:'Bata tudo até obter textura homogênea. Para mais grosso, reduza a água; para mais leve, aumente.',
+   why:'A proteína fornece os blocos para reparar e fortalecer os músculos, e as frutas repõem energia e entregam antioxidantes e fibras.'}
+];
+
+/* ================= ESTADO ================= */
+var $ = function(s){return document.querySelector(s)};
+var $$ = function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var S = {week:1, treino:'A', sound:true, done:{}, finIdx:0};
+try{ var saved = JSON.parse(localStorage.getItem('zovar15x')||'{}'); for(var k in saved){ S[k]=saved[k]; } }catch(e){}
+if(!WEEKS[S.week-1]) S.week = 1;
+if(!WORKOUTS[S.treino]) S.treino = 'A';
+function save(){ try{ localStorage.setItem('zovar15x', JSON.stringify(S)); }catch(e){} }
+function doneKey(w,t){ return w+t; }
+function doneCount(){ var c=0; for(var k in S.done){ if(S.done[k]) c++; } return c; }
+function fmt(sec){ sec=Math.max(0,Math.ceil(sec)); var m=Math.floor(sec/60), s=sec%60; return (m<10?'0':'')+m+':'+(s<10?'0':'')+s; }
+function fmtShort(sec){ sec=Math.round(sec); return Math.floor(sec/60)+':'+('0'+(sec%60)).slice(-2); }
+
+/* ================= NAVEGAÇÃO ================= */
+function showTab(id){
+  document.body.setAttribute('data-tab', id);
+  $$('.view').forEach(function(v){ v.classList.toggle('active', v.id==='tab-'+id); });
+  $$('.tab').forEach(function(t){ var on=t.dataset.tab===id; t.classList.toggle('on',on); t.setAttribute('aria-selected',on); });
+  window.scrollTo({top:0,behavior:'instant' in window ? 'instant' : 'auto'});
+}
+$$('.tab').forEach(function(t){ t.addEventListener('click', function(){ showTab(t.dataset.tab); }); });
+
+/* ================= RENDER: TREINOS ================= */
+function chipsWeeks(el){
+  el.innerHTML = WEEKS.map(function(w){
+    var doneN = ['A','B','C'].filter(function(t){return S.done[doneKey(w.n,t)]}).length;
+    return '<button class="chip'+(S.week===w.n?' on':'')+(doneN===3?' done':'')+'" data-w="'+w.n+'">S'+w.n+'<small>'+doneN+'/3</small></button>';
+  }).join('');
+}
+function chipsTreinos(el){
+  el.innerHTML = ['A','B','C'].map(function(t){
+    return '<button class="chip'+(S.treino===t?' on':'')+(S.done[doneKey(S.week,t)]?' done':'')+'" data-t="'+t+'">'+t+'<small>'+WORKOUTS[t].short+'</small></button>';
+  }).join('');
+}
+function bindChips(el){
+  el.addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if(!b) return;
+    if(b.dataset.w) S.week = +b.dataset.w;
+    if(b.dataset.t) S.treino = b.dataset.t;
+    S.finIdx = 0; save(); renderAll();
+  });
+}
+function renderTreinos(){
+  var w = WEEKS[S.week-1], W = WORKOUTS[S.treino];
+  chipsWeeks($('#weekChips')); chipsTreinos($('#trChips'));
+  $('#wkName').textContent = 'Semana '+w.n+' · '+w.name;
+  var mins = Math.round(totalSecs(buildSeq(0,true))/60);
+  $('#wkInfo').innerHTML =
+    '<div><b>'+w.rounds+'</b><span>rodadas</span></div>'+
+    '<div><b>'+w.between+'s</b><span>entre rodadas</span></div>'+
+    '<div><b>'+(w.fin? '2 min':'—')+'</b><span>finisher</span></div>'+
+    '<div style="grid-column:1/-1"><b>~'+mins+' min</b><span>de treino no timer + 2 a 3 min de aquecimento</span></div>';
+  $('#trName').textContent = 'Treino '+S.treino+': '+W.name;
+  $('#trFocus').textContent = W.focus + (w.fin ? ' Finisher: 2 min contínuos no exercício que você mais gosta.' : '');
+  $('#exList').innerHTML = W.ex.map(function(e,i){
+    return '<article class="ex"><button class="ex-head" aria-expanded="false"><span class="ex-num">'+(i+1)+'</span><span class="ex-name">'+e.n+'</span><span class="ex-time">45s · 15s</span><span class="chev">▼</span></button>'+
+      '<div class="ex-body"><p><b>Como fazer:</b> '+e.how+'</p><p><b>Dica:</b> '+e.tip+'</p>'+
+      (e.easy?'<p><b>Mais leve:</b> '+e.easy+'</p>':'')+(e.hard?'<p><b>Mais forte:</b> '+e.hard+'</p>':'')+
+      '<button class="btn ghost" data-go="'+i+'">⏱ Cronometrar a partir deste exercício</button></div></article>';
+  }).join('');
+  var d = !!S.done[doneKey(S.week,S.treino)];
+  var db = $('#doneBtn'); db.textContent = d ? '✓ Treino concluído (toque para desmarcar)' : 'Marcar treino como concluído'; db.classList.toggle('is-done', d);
+  $('#progTxt').textContent = doneCount()+'/12';
+}
+$('#exList').addEventListener('click', function(e){
+  var go = e.target.closest('[data-go]');
+  if(go){ openTimer(+go.dataset.go); return; }
+  var head = e.target.closest('.ex-head');
+  if(head){ var ex = head.parentNode, open = !ex.classList.contains('open'); ex.classList.toggle('open', open); head.setAttribute('aria-expanded', open); }
+});
+$('#goTimerBtn').addEventListener('click', function(){ openTimer(0); });
+$('#doneBtn').addEventListener('click', function(){ var k=doneKey(S.week,S.treino); S.done[k]=!S.done[k]; save(); renderAll(false); });
+$('#resetProg').addEventListener('click', function(){ if(confirm('Zerar todo o seu progresso?')){ S.done={}; save(); renderAll(false); } });
+bindChips($('#weekChips')); bindChips($('#trChips')); bindChips($('#tWeekChips')); bindChips($('#tTrChips'));
+
+/* ================= RENDER: NUTRIÇÃO ================= */
+$('#foods').innerHTML = FOODS.map(function(f,i){
+  return '<div class="food"><div class="n">'+(i+1)+'</div><div><h3>'+f.n+'</h3><p>'+f.p+'</p></div></div>';
+}).join('');
+$('#shakes').innerHTML = SHAKES.map(function(s){
+  return '<div class="shake"><span class="tag">'+s.tag+'</span><h3>'+s.name+'</h3><div class="when">'+s.when+'</div>'+
+    '<h4>Ingredientes (1 porção)</h4><ul>'+s.ing.map(function(i){return '<li>'+i+'</li>'}).join('')+'</ul>'+
+    '<h4>Modo de preparo</h4><p>'+s.prep+'</p><h4>Por que funciona</h4><p>'+s.why+'</p></div>';
+}).join('');
+
+/* ================= TIMER: SEQUÊNCIA ================= */
+// Cada etapa: {type:'prep'|'work'|'rest'|'finisher', dur, ex, round, brk, next}
+function buildSeq(startEx, noPrep){
+  var w = WEEKS[S.week-1], seq = [], i, r;
+  if(!noPrep) seq.push({type:'prep', dur:PREP_S, ex:startEx||0, round:1});
+  for(r=1; r<=w.rounds; r++){
+    for(i=(r===1 ? (startEx||0) : 0); i<4; i++){
+      seq.push({type:'work', dur:WORK_S, ex:i, round:r});
+      var last = i===3, lastRound = r===w.rounds;
+      if(last && lastRound){
+        if(w.fin) seq.push({type:'rest', dur:w.between, ex:S.finIdx, round:r, brk:true, finNext:true});
+      } else if(last){
+        seq.push({type:'rest', dur:w.between, ex:0, round:r, brk:true});
+      } else {
+        seq.push({type:'rest', dur:REST_S, ex:i+1, round:r});
+      }
+    }
+  }
+  if(w.fin) seq.push({type:'finisher', dur:w.fin, ex:S.finIdx, round:0});
+  return seq;
+}
+function totalSecs(seq){ return seq.reduce(function(a,s){return a+s.dur},0); }
+
+/* ================= TIMER: MOTOR ================= */
+var T = {seq:[], cum:[], idx:0, rem:0, run:false, end:0, iv:null, lastSec:null, finished:false, startEx:0, wake:null};
+var CIRC = 2*Math.PI*88;
+var ring = $('#ring'); ring.style.strokeDasharray = CIRC;
+
+var AC = null;
+function audio(){
+  if(!AC){ try{ AC = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(AC && AC.state==='suspended'){ try{ AC.resume(); }catch(e){} }
+  return AC;
+}
+function beep(freq, dur, delay, vol, type){
+  if(!S.sound) return; var a = audio(); if(!a) return;
+  var o = a.createOscillator(), g = a.createGain(), t = a.currentTime + (delay||0);
+  o.type = type||'sine'; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol||0.25, t+0.012); g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+  o.connect(g); g.connect(a.destination); o.start(t); o.stop(t+dur+0.03);
+}
+function buzz(p){ if(S.sound && navigator.vibrate){ try{ navigator.vibrate(p); }catch(e){} } }
+
+function prepareTimer(startEx){
+  stopLoop();
+  T.startEx = startEx||0;
+  T.seq = buildSeq(T.startEx);
+  var c=0; T.cum = T.seq.map(function(s){ var v=c; c+=s.dur; return v; });
+  T.idx = 0; T.rem = T.seq[0].dur*1000; T.finished = false; T.run = false;
+  paintTimer();
+}
+function stopLoop(){ if(T.iv){ clearInterval(T.iv); T.iv=null; } T.run=false; releaseWake(); }
+function requestWake(){ try{ if(navigator.wakeLock && !T.wake){ navigator.wakeLock.request('screen').then(function(l){ T.wake=l; l.addEventListener('release',function(){T.wake=null}); }).catch(function(){}); } }catch(e){} }
+function releaseWake(){ try{ if(T.wake){ T.wake.release(); T.wake=null; } }catch(e){} }
+document.addEventListener('visibilitychange', function(){ if(!document.hidden && T.run) requestWake(); });
+
+function startTimer(){
+  audio();
+  if(T.finished) prepareTimer(T.startEx);
+  T.run = true; T.end = Date.now() + T.rem; T.lastSec = null;
+  T.iv = setInterval(tick, 100);
+  requestWake();
+  if(T.idx===0 && T.seq[0].type==='prep'){ beep(660,.08,0,.2); }
+  paintTimer();
+}
+function pauseTimer(){ if(!T.run) return; T.rem = Math.max(0, T.end - Date.now()); stopLoop(); paintTimer(); }
+function tick(){
+  T.rem = T.end - Date.now();
+  var sec = Math.ceil(T.rem/1000);
+  if(sec !== T.lastSec){
+    T.lastSec = sec;
+    if(sec>=1 && sec<=3){ beep(sec===1 ? 880 : 640, .12, 0, .22); buzz(40); }
+  }
+  if(T.rem <= 0){ advance(); } else { paintTimer(); }
+}
+function advance(){
+  T.idx++;
+  if(T.idx >= T.seq.length){ finishTimer(); return; }
+  T.rem = T.seq[T.idx].dur*1000; T.end = Date.now() + T.rem; T.lastSec = null;
+  phaseStart(T.seq[T.idx]); paintTimer();
+}
+function phaseStart(s){
+  var card = $('#tCard'); card.classList.remove('flash'); void card.offsetWidth; card.classList.add('flash');
+  if(s.type==='work'){ beep(1040,.12,0,.3,'square'); beep(1040,.2,.16,.3,'square'); buzz([160,60,160]); }
+  else if(s.type==='rest'){ beep(440,.35,0,.28); buzz(260); }
+  else if(s.type==='finisher'){ beep(988,.1,0,.3,'square'); beep(988,.1,.14,.3,'square'); beep(1318,.3,.28,.3,'square'); buzz([120,60,120,60,300]); }
+}
+function finishTimer(){
+  stopLoop(); T.finished = true; T.idx = T.seq.length-1; T.rem = 0;
+  S.done[doneKey(S.week,S.treino)] = true; save();
+  beep(784,.15,0,.3); beep(988,.15,.18,.3); beep(1318,.4,.36,.3); buzz([200,80,200,80,400]);
+  paintTimer(); renderTreinos(); chipsWeeks($('#tWeekChips')); chipsTreinos($('#tTrChips'));
+}
+
+function paintTimer(){
+  var s = T.seq[T.idx], W = WORKOUTS[S.treino], w = WEEKS[S.week-1], card = $('#tCard');
+  var phase = T.finished ? 'done' : s.type;
+  card.dataset.phase = phase;
+  var label = {prep:'Prepare-se', work:'Ação!', rest: s.brk ? 'Descanso de rodada' : 'Descanso', finisher:'Finisher', done:'Concluído'}[phase];
+  if(!T.run && !T.finished && T.idx===0 && T.rem===s.dur*1000) label = 'Pronto?';
+  $('#tPhase').textContent = label;
+  var remSec = T.rem/1000;
+  $('#tDigits').textContent = T.finished ? '00:00' : fmt(remSec);
+  var frac = T.finished ? 0 : (T.rem/(s.dur*1000));
+  ring.style.strokeDashoffset = CIRC*(1-frac);
+
+  var exI = s.ex, nameTxt, meta;
+  if(T.finished){ nameTxt = 'Treino '+S.treino+' completo! 🔥'; meta = 'Semana '+w.n+' · '+W.name+' marcado como concluído.'; }
+  else if(s.type==='work'){ nameTxt = W.ex[exI].n; meta = 'Rodada '+s.round+' de '+w.rounds+' · exercício '+(exI+1)+'/4'; }
+  else if(s.type==='finisher'){ nameTxt = W.ex[exI].n; meta = 'Finisher: ritmo mais forte possível, postura correta'; }
+  else if(s.type==='rest'){ nameTxt = 'A seguir: '+(s.finNext ? 'Finisher · ' : '')+W.ex[exI].n; meta = s.brk && !s.finNext ? 'Fim da rodada '+s.round+' · próxima: rodada '+(s.round+1) : 'Respire e prepare o próximo'; }
+  else { nameTxt = 'Primeiro: '+W.ex[exI].n; meta = 'Semana '+w.n+' · Treino '+S.treino+' · '+w.rounds+' rodadas'+(w.fin?' + finisher':''); }
+  $('#tEx').textContent = nameTxt; $('#tMeta').textContent = meta;
+
+  var total = T.cum[T.seq.length-1] + T.seq[T.seq.length-1].dur;
+  var elapsed = T.finished ? total : T.cum[T.idx] + (s.dur - remSec);
+  $('#tBar').style.width = Math.min(100, elapsed/total*100)+'%';
+  $('#tElapsed').textContent = fmtShort(elapsed); $('#tTotal').textContent = fmtShort(total);
+
+  var activeEx = (s.type==='work'||s.type==='finisher') ? s.ex : -1, nextEx = s.type==='rest'||s.type==='prep' ? s.ex : -1;
+  $('#tQueue').innerHTML = W.ex.map(function(e,i){
+    return '<span class="'+(i===activeEx&&!T.finished?'on':(i===nextEx&&!T.finished?'nx':''))+'">'+(i+1)+'. '+e.n.split(' (')[0]+'</span>';
+  }).join('');
+
+  var main = $('#bMain');
+  main.textContent = T.finished ? '↻ Refazer' : (T.run ? '❚❚ Pausar' : (T.idx===0 && T.rem===T.seq[0].dur*1000 ? '▶ Iniciar' : '▶ Continuar'));
+}
+
+$('#bMain').addEventListener('click', function(){
+  if(T.run) pauseTimer(); else startTimer();
+});
+$('#bReset').addEventListener('click', function(){ prepareTimer(T.startEx); });
+$('#bSkip').addEventListener('click', function(){
+  if(T.finished) return;
+  var was = T.run; audio();
+  if(T.idx >= T.seq.length-1){ finishTimer(); return; }
+  T.idx++; T.rem = T.seq[T.idx].dur*1000; T.lastSec = null;
+  if(was){ T.end = Date.now() + T.rem; phaseStart(T.seq[T.idx]); }
+  paintTimer();
+});
+$('#sndChk').addEventListener('change', function(e){ S.sound = e.target.checked; save(); if(S.sound){ audio(); beep(880,.1,0,.2); } });
+$('#finSel').addEventListener('change', function(e){ S.finIdx = +e.target.value; save(); prepareTimer(T.startEx); });
+
+function openTimer(startEx){
+  prepareTimer(startEx||0);
+  showTab('timer');
+}
+
+/* ================= RENDER GERAL ================= */
+function renderTimerCfg(){
+  var w = WEEKS[S.week-1];
+  chipsWeeks($('#tWeekChips')); chipsTreinos($('#tTrChips'));
+  $('#tSub').textContent = 'Semana '+w.n+' · Treino '+S.treino+' · '+w.rounds+' rodadas de 45s/15s'+(w.fin?' + finisher de 2 min':'')+'.';
+  var sel = $('#finSel');
+  if(w.fin){
+    sel.hidden = false;
+    sel.innerHTML = WORKOUTS[S.treino].ex.map(function(e,i){ return '<option value="'+i+'"'+(S.finIdx===i?' selected':'')+'>Finisher: '+e.n+'</option>'; }).join('');
+  } else sel.hidden = true;
+}
+function renderAll(resetTimer){
+  renderTreinos(); renderTimerCfg();
+  if(resetTimer !== false) prepareTimer(0);
+  $('#sndChk').checked = !!S.sound;
+}
+
+renderAll();
+
+/* ================= SUPORTE ================= */
+// Para mostrar o botão "Falar com o suporte", coloque aqui o link (ex.: 'https://wa.me/55DDDNUMERO' ou 'mailto:email@dominio.com').
+var SUPPORT_URL = '';
+
+var FAQ = [
+  {t:'Treinos', q:[
+    ['Como funciona o programa?', 'São 4 semanas com 3 treinos por semana (A, B e C), de preferência em dias alternados, como Seg · Qua · Sex. Cada treino tem 4 exercícios em rodadas de 45s de ação e 15s de descanso, usando só o peso do corpo.'],
+    ['Como escolho a semana e o treino?', 'Na aba <b>Treinos</b>, toque em S1 a S4 para escolher a semana e em A, B ou C para escolher o treino. O número embaixo de cada semana mostra quantos treinos você já concluiu.'],
+    ['Como vejo como fazer cada exercício?', 'Toque no nome do exercício na lista. Abre o passo a passo, a dica de execução e, quando existir, a versão <b>mais leve</b> ou <b>mais forte</b>.'],
+    ['Qual a diferença entre as semanas?', 'Semana 1 (Ativação): 3 rodadas. Semana 2 (Aceleração): 4 rodadas. Semana 3 (Intensificação): 4 rodadas + finisher de 2 min. Semana 4 (Máxima Queima): 5 rodadas.'],
+    ['Preciso de algum equipamento?', 'Não. Todos os treinos usam só o peso do corpo. Em exercícios como a flexão, o app mostra versões mais leves, como apoiar os joelhos ou usar uma superfície elevada.'],
+    ['Não consigo fazer um exercício do jeito indicado.', 'Abra o exercício e veja a opção <b>Mais leve</b>. Técnica vem antes de velocidade: faça no seu ritmo, com boa execução.']
+  ]},
+  {t:'Timer', q:[
+    ['Como usar o timer?', 'Toque em <b>Iniciar no timer</b> na aba Treinos ou abra a aba <b>Timer</b>. Ele começa com 5 segundos de preparação e depois alterna ação e descanso sozinho. Use ▶ para iniciar, ❚❚ para pausar, ↺ para reiniciar e ⏭ para pular a etapa.'],
+    ['Posso começar de um exercício específico?', 'Sim. Em qualquer exercício da lista, toque em <b>Cronometrar a partir deste exercício</b>.'],
+    ['O que é o finisher?', 'Na Semana 3, depois das rodadas, há 2 minutos contínuos em um exercício. Você escolhe qual no seletor que aparece na aba Timer.'],
+    ['Como ligo ou desligo o som e a vibração?', 'No interruptor <b>Alertas sonoros e vibração</b>, na aba Timer. Os bipes avisam os últimos 3 segundos e a troca de etapa. A vibração depende do aparelho.'],
+    ['O som não toca.', 'Confira se o interruptor de alertas está ligado, se o volume do celular está alto e se o modo silencioso está desativado. O áudio é liberado quando você toca em Iniciar.'],
+    ['A tela apaga durante o treino.', 'O app tenta manter a tela acesa enquanto o timer roda, quando o aparelho permite. Se ela apagar, aumente o tempo de tela ligada nas configurações do celular e mantenha o app aberto durante o treino.'],
+    ['O treino é marcado como concluído sozinho?', 'Sim. Ao terminar o timer, o treino é marcado como concluído. Você também pode marcar ou desmarcar manualmente na aba Treinos.']
+  ]},
+  {t:'Nutrição', q:[
+    ['O que tem na aba Nutrição?', '5 alimentos campeões, um bônus sobre água, 2 shakes express (pré e pós-treino) e o seu prato Zovar.'],
+    ['Quando tomo cada shake?', 'O <b>Ignição Zovar</b> é pré-treino: tome de 30 a 45 minutos antes. O <b>Recuperação Express</b> é pós-treino: tome até 1 hora depois.'],
+    ['Como monto o prato Zovar?', '½ legumes e verduras, ¼ proteína, ¼ carboidrato de qualidade e um fio de gordura boa, como azeite, abacate ou castanhas.'],
+    ['Quais ingredientes dos shakes são opcionais?', 'No Ignição, o café coado frio. No Recuperação, a ½ banana. O whey também pode ser trocado por 150 g de iogurte grego natural.']
+  ]},
+  {t:'Progresso e app', q:[
+    ['O que significa o progresso 0/12?', 'São 12 treinos no total: 3 por semana durante 4 semanas. Cada treino concluído soma 1.'],
+    ['Como zero meu progresso?', 'No fim da página, toque em <b>Zerar meu progresso</b> e confirme.'],
+    ['Perdi meu progresso.', 'O progresso fica salvo no próprio aparelho. Limpar os dados do app ou do navegador, ou trocar de aparelho, apaga o histórico.'],
+    ['O app funciona sem internet?', 'Sim. Depois de aberto uma vez com internet, o app fica guardado no aparelho e abre offline. Quando houver conexão, ele se atualiza sozinho.'],
+    ['Existem atalhos?', 'Sim. Segure o ícone do app na tela inicial do celular para abrir direto em Treinos, Timer ou Nutrição.']
+  ]}
+];
+
+(function(){
+  var sup = $('#sup'), btn = $('#supBtn'), list = $('#supList'), isOpen = false;
+  list.innerHTML = FAQ.map(function(g){
+    return '<div class="sup-grp"><div class="lbl">'+g.t+'</div>'+g.q.map(function(x){
+      return '<details class="acc"><summary>'+x[0]+'</summary><div class="in">'+x[1]+'</div></details>';
+    }).join('')+'</div>';
+  }).join('');
+  if(SUPPORT_URL){ var cta = $('#supCta'); cta.href = SUPPORT_URL; cta.hidden = false; }
+
+  function openSup(){
+    if(isOpen) return; isOpen = true;
+    sup.classList.add('open'); sup.setAttribute('aria-hidden','false');
+    document.documentElement.style.overflow = 'hidden';
+    try{ history.pushState({sup:1}, ''); }catch(e){}
+    setTimeout(function(){ $('#supX').focus(); }, 60);
+  }
+  function closeSup(){
+    if(!isOpen) return; isOpen = false;
+    sup.classList.remove('open'); sup.setAttribute('aria-hidden','true');
+    document.documentElement.style.overflow = '';
+    btn.focus();
+  }
+  function reqClose(){ if(history.state && history.state.sup){ history.back(); } else closeSup(); }
+
+  btn.addEventListener('click', openSup);
+  $('#supX').addEventListener('click', reqClose);
+  $('#supBg').addEventListener('click', reqClose);
+  window.addEventListener('popstate', function(){ if(isOpen) closeSup(); });
+  document.addEventListener('keydown', function(e){
+    if(!isOpen) return;
+    if(e.key === 'Escape'){ reqClose(); return; }
+    if(e.key === 'Tab'){
+      var f = $$('#sup button, #sup summary, #sup a[href]').filter(function(n){ return n.offsetParent !== null; });
+      if(!f.length) return;
+      var first = f[0], last = f[f.length-1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  });
+})();
+
+/* Atalhos do app (?tab=treinos|timer|nutri) */
+try{ var qt = new URLSearchParams(location.search).get('tab'); if(qt==='treinos'||qt==='timer'||qt==='nutri') showTab(qt); }catch(e){}
+
+/* PWA: registra o service worker (precisa de HTTPS) */
+if('serviceWorker' in navigator){ window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); }); }
+})();
+</script>
+</body>
+</html>
